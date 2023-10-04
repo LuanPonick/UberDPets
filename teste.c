@@ -3,18 +3,15 @@
 #include <string.h>
 
 int main(){
-    char userName[] = "";    
-    //end declarentions
+    char minhaString[] = "Hello, World!";
+    int i;
 
-    pedirNome(userName);
-    printf(userName);
-}
-
-void pedirNome(char *name[]){
-
-    for (int i = 0; i < 3; i++)
-    {
-        printf(".");
+    for (i = 0; minhaString[i] != '\0'; i++) {
+        minhaString[i] = toupper(minhaString[i]);
     }
-    
+
+    printf("String em maiúsculas: %s\n", minhaString);
+
+    return 0;
 }
+
