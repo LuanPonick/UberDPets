@@ -1,90 +1,127 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
-#include <regex.h>
-#include <unistd.h>
 
-void pedirNome( char** name[] );
-void pedirConfirmacao( char** resposta[], bool regex, char value[], char nomeFuncao[] );
-void tipoDeCadastro( char **valor[] );
+// Estrutura para armazenar informações de clientes
+struct Cliente {
+    char nome[50];
+    char endereco[100];
+    char telefone[15];
+    char formaPagamento[10]; // Agora aceita "credito" ou "debito"
+    char caixaTransporte[5]; // Resposta 'Sim' ou 'Nao'
+    float distanciaKm;
+    char nomePet[50];
+    char tipoPet[20]; // "Cachorro" ou "Gato"
+};
 
-int main(){
-    char userName[] = ""; 
-    char escolhaCadastroDeUsuario[] = "";
-    //end declarentions
-    
-    //tipoDeCadastro( escolhaCadastroDeUsuario );
-    pedirNome( userName );
-    printf(userName);
-    
-    return 1;
-}
+// Estrutura para armazenar informações de motoristas
+struct Motorista {
+    char nome[50];
+    char numeroCNH[20];
+    char antecedentesCriminais[5]; // Resposta 'Sim' ou 'Nao'
+};
 
-void pedirNome(char** name[]){
-    regex_t regex;
-   
-    
-    pedirNomeInicio:
-    //pega nome de entrada
-    printf( "Digite o nome do usuario: " );
-    fgets( name, sizeof(name), stdin );
-    char resp[] = ""; 
-    pedirConfirmacao(resp, true, name, "pedirNome");
-    printf("%s: animal",resp);
-    
-}
-void pedirConfirmacao( char** resposta[], bool regex, char value[], char nomeFuncao[]){
-    //regra regex -> nao permitir numero! 
-    int reti;
-    reti = regcomp( &regex, "^[^0-9]*$", 0 );
-    reti = regexec( &regex, value, 0, NULL, 0 );
-    
-    pedirNomeConfirmacao:
-         
-    //testa se o nome é valido na regra do regex
-    if ( reti && regex) {
-        printf("antes");
-        //printf( "favor não digite numeros...\n " );
-        //usleep( 2000000 );
-        strcat(nomeFuncao, "Inicio");
-        resposta = nomeFuncao;
-        printf("teste %s",resposta);
-    }   
-    //confirmaçao
-    char chose[] = ""; 
-    printf( "voce digitou %s", value );
-    printf( "esta correto? (Y/N)" );
-    scanf(" %c", chose);
-    chose[0] = toupper(chose[0]);
-    
-    //testa se o resultado de entrada é Y/y caso nao ele pergunta novamente
-    if( strcmp( chose, "Y") == 0 ){
-        resposta = "ok";
-        return;
-    }else if( strcmp( chose, "N") == 0 ){
-        resposta = "pedirNomeInicio";
-    }else{
-        printf("favor digite Y ( sim ) ou N ( não )... \n");
-        usleep(1000000);
-        goto pedirNomeConfirmacao;
+int main() {
+    int escolha;
+
+    // Loop principal do programa
+    while (1) {
+        printf("Escolha uma opcao:\n");
+        printf("1 - Cadastrar Cliente\n");
+        printf("2 - Cadastrar Motorista\n");
+        printf("0 - Sair\n");
+
+        scanf("%d", &escolha);
+
+        if (escolha == 0) {
+            // Sair do programa
+            break;
+        } else if (escolha == 1) {
+            // Cadastrar um cliente
+            struct Cliente cliente;
+            printf("Nome do cliente: ");
+            scanf("%s", cliente.nome);
+            printf("Endereco do cliente: ");
+            scanf("%s", cliente.endereco);
+            printf("Telefone do cliente: ");
+            scanf("%s", cliente.telefone);
+
+            // Solicitar a forma de pagamento até que seja "credito" ou "debito"
+            do {
+                printf("Forma de pagamento do cliente (credito/debito): ");
+                scanf("%s", cliente.formaPagamento);
+            } while (strcmp(cliente.formaPagamento, "credito") != 0 && strcmp(cliente.formaPagamento, "debito") != 0);
+
+            printf("Voce teria a caixa de transporte para seu pet? (Sim/Nao): ");
+            scanf("%s", cliente.caixaTransporte);
+
+            // Verificar se o cliente tem a caixa de transporte
+            if (strcmp(cliente.caixaTransporte, "Nao") == 0) {
+                printf("Cancelado\n\n");
+                continue; // Volta ao menu principal sem prosseguir com o cadastro
+            }
+
+            printf("Digite a distancia em quilometros da sua casa ate a empresa: ");
+            scanf("%f", &cliente.distanciaKm);
+
+            printf("Nome do pet: ");
+            scanf("%s", cliente.nomePet);
+
+            // Perguntar se o pet é um gato ou cachorro
+            printf("Seu pet é um gato ou cachorro? ");
+            scanf("%s", cliente.tipoPet);
+
+            // Calcular o preço do transporte
+            float preco = 5.0 + (cliente.distanciaKm * 1.6);
+
+            // Aplicar acréscimo ou desconto com base na forma de pagamento
+            if (strcmp(cliente.formaPagamento, "credito") == 0) {
+                preco *= 1.03; // Acréscimo de 3%
+            } else if (strcmp(cliente.formaPagamento, "debito") == 0) {
+                preco -= 10.0; // Desconto de R$ 10,00
+            }
+
+            // Exibir informações do cliente, incluindo o nome do pet, tipo e o preço final
+            printf("\nCliente cadastrado:\n");
+            printf("Nome: %s\n", cliente.nome);
+            printf("Endereco: %s\n", cliente.endereco);
+            printf("Telefone: %s\n", cliente.telefone);
+            printf("Forma de pagamento: %s\n", cliente.formaPagamento);
+            printf("Caixa de transporte para pet: %s\n", cliente.caixaTransporte);
+            printf("Distancia ate a empresa: %.2f km\n", cliente.distanciaKm);
+            printf("Nome do pet: %s\n", cliente.nomePet);
+            printf("Tipo de pet: %s\n", cliente.tipoPet);
+            printf("Preco do transporte: $%.2f\n\n", preco);
+
+        } else if (escolha == 2) {
+            // Cadastrar um motorista
+            struct Motorista motorista;
+            printf("Nome do motorista: ");
+            scanf("%s", motorista.nome);
+            printf("Numero da CNH do motorista: ");
+            scanf("%s", motorista.numeroCNH);
+            printf("Possui antecedentes criminais? (Sim/Nao): ");
+            scanf("%s", motorista.antecedentesCriminais);
+
+            // Perguntar ao motorista se deseja confirmar o cadastro
+            printf("Deseja confirmar o cadastro do motorista (Sim/Nao)? ");
+            char confirmacao[5];
+            scanf("%s", confirmacao);
+
+            if (strcmp(confirmacao, "Sim") == 0) {
+                // Exibir informações do motorista
+                printf("\nMotorista cadastrado:\n");
+                printf("Nome: %s\n", motorista.nome);
+                printf("Numero da CNH: %s\n", motorista.numeroCNH);
+                printf("Antecedentes criminais: %s\n", motorista.antecedentesCriminais);
+                printf("Cadastro confirmado\n\n");
+            } else {
+                printf("Cadastro cancelado\n\n");
+            }
+
+        } else {
+            printf("Opcao invalida. Tente novamente.\n\n");
+        }
     }
-}
 
-void tipoDeCadastro( char **valor[] ){
-    char temp;
-    
-    tipoDeCadastroInicio:
-    printf( "qual seria a forma de cadastro? " );
-    printf( "( 1 ) Cliente " );
-    printf( "( 2 ) Motorista " );
-    fgets( temp, sizeof(temp), stdin ); 
-    if(strcmp( temp, "1") == 0 ){
-        return;
-    }else if( strcmp( temp, "2") == 0 ){
-        return;
-    }
-    printf("favor digite Um valor valido... \n");
-    usleep(1000000);
-    goto tipoDeCadastroInicio;
-    
+    return 0;
 }
