@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <string.h>
-
+/*
+*
+* repositorio desse código https://github.com/LuanPonick/UberDPets .
+*
+*/
 // Estrutura para armazenar informações de clientes
 struct Cliente {
     char nome[50];
