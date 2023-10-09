@@ -6,18 +6,19 @@ struct Cliente {
     char nome[50];
     char endereco[100];
     char telefone[15];
-    char formaPagamento[10]; // Agora aceita "credito" ou "debito"
-    char caixaTransporte[5]; // Resposta 'Sim' ou 'Nao'
+    char formaPagamento[10]; 
+    char caixaTransporte[5]; 
     float distanciaKm;
     char nomePet[50];
-    char tipoPet[20]; // "Cachorro" ou "Gato"
+    char tipoPet[20]; 
+    char numeroCartao[20]; 
 };
 
 // Estrutura para armazenar informações de motoristas
 struct Motorista {
     char nome[50];
     char numeroCNH[20];
-    char antecedentesCriminais[5]; // Resposta 'Sim' ou 'Nao'
+    char antecedentesCriminais[5]; 
 };
 
 int main() {
@@ -42,10 +43,17 @@ int main() {
             scanf("%s", cliente.nome);
             printf("Endereco do cliente: ");
             scanf("%s", cliente.endereco);
-            printf("Telefone do cliente: ");
-            scanf("%s", cliente.telefone);
 
-            // Solicitar a forma de pagamento até que seja "credito" ou "debito"
+            while (getchar() != '\n');
+
+            printf("Telefone do cliente: ");
+            fgets(cliente.telefone, sizeof(cliente.telefone), stdin);
+            cliente.telefone[strlen(cliente.telefone) - 1] = '\0'; 
+
+            printf("Numero do cartao de credito: "); 
+            fgets(cliente.numeroCartao, sizeof(cliente.numeroCartao), stdin);
+            cliente.numeroCartao[strlen(cliente.numeroCartao) - 1] = '\0'; 
+
             do {
                 printf("Forma de pagamento do cliente (credito/debito): ");
                 scanf("%s", cliente.formaPagamento);
@@ -54,19 +62,17 @@ int main() {
             printf("Voce teria a caixa de transporte para seu pet? (Sim/Nao): ");
             scanf("%s", cliente.caixaTransporte);
 
-            // Verificar se o cliente tem a caixa de transporte
             if (strcmp(cliente.caixaTransporte, "Nao") == 0) {
                 printf("Cancelado\n\n");
-                continue; // Volta ao menu principal sem prosseguir com o cadastro
+                continue; 
             }
 
-            printf("Digite a distancia em quilometros da sua casa ate a empresa: ");
+            printf("Digite a distancia em quilometros da sua casa até a empresa: ");
             scanf("%f", &cliente.distanciaKm);
 
             printf("Nome do pet: ");
             scanf("%s", cliente.nomePet);
 
-            // Perguntar se o pet é um gato ou cachorro
             printf("Seu pet é um gato ou cachorro? ");
             scanf("%s", cliente.tipoPet);
 
@@ -86,11 +92,12 @@ int main() {
             printf("Endereco: %s\n", cliente.endereco);
             printf("Telefone: %s\n", cliente.telefone);
             printf("Forma de pagamento: %s\n", cliente.formaPagamento);
+            printf("Numero do cartao: %s\n", cliente.numeroCartao); 
             printf("Caixa de transporte para pet: %s\n", cliente.caixaTransporte);
-            printf("Distancia ate a empresa: %.2f km\n", cliente.distanciaKm);
+            printf("Distancia até a empresa: %.2f km\n", cliente.distanciaKm);
             printf("Nome do pet: %s\n", cliente.nomePet);
             printf("Tipo de pet: %s\n", cliente.tipoPet);
-            printf("Preco do transporte: $%.2f\n\n", preco);
+            printf("Preço do transporte: $%.2f\n\n", preco);
 
         } else if (escolha == 2) {
             // Cadastrar um motorista
